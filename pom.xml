@@ -1,0 +1,113 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>br.com.ono</groupId>
+  <artifactId>my-moduleproject</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0</version>
+  <name>my-moduleproject Maven Webapp</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jettyVersion>9.4.8.v20171121</jettyVersion>
+  </properties>
+
+  <modules>
+        <module>my-core-api</module>
+        <module>my-core-web</module>
+        <module>my-creditcard-api</module>
+        <module>my-creditcard-web</module>
+        <module>my-investment-api</module>
+        <module>my-investment-web</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.7</source>
+                        <target>1.7</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-surefire-plugin</artifactId>
+                  <version>2.13</version>
+                </plugin>
+                <plugin>
+                  <groupId>org.eclipse.jetty</groupId>
+                  <artifactId>jetty-maven-plugin</artifactId>
+                  <version>${jettyVersion}</version>
+                   <configuration>
+
+                    <webAppSourceDirectory>${project.basedir}/src/main/webapp</webAppSourceDirectory>
+
+                    <webApp implementation="org.eclipse.jetty.maven.plugin.JettyWebAppContext">                        
+                        <contextPath>/core</contextPath>
+                        <resourceBase>${project.basedir}/src/main/webapp</resourceBase>
+                    </webApp>
+
+                     <scanTargets>
+                        <scanTarget>.${project.basedir}/../my-investment-api/target/classes</scanTarget>
+                        <scanTarget>${project.basedir}/../my-creditcard-api/target/classes</scanTarget>
+                    </scanTargets>
+                    
+                    <contextHandlers>
+                        <contextHandler implementation="org.eclipse.jetty.maven.plugin.JettyWebAppContext">
+                            <contextPath>/investment</contextPath>
+                            <resourceBase>${project.basedir}/../my-investment-web/src/main/webapp</resourceBase>
+                        </contextHandler>
+                        <contextHandler implementation="org.eclipse.jetty.maven.plugin.JettyWebAppContext">
+                          <contextPath>/creditcard</contextPath>
+                          <resourceBase>${project.basedir}/../my-creditcard-web/src/main/webapp</resourceBase>
+                        </contextHandler>
+                    </contextHandlers>
+                </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.8.1</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>3.1.0</version>
+        <scope>provided</scope>
+    </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.14</version>
+        </dependency>
+
+        <!-- project modules ini -->
+        <dependency>
+            <groupId>br.com.ono</groupId>
+            <artifactId>my-core-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>br.com.ono</groupId>
+            <artifactId>my-investment-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>br.com.ono</groupId>
+            <artifactId>my-creditcard-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- project modules end -->
+    </dependencies>
+  </dependencyManagement>
+</project>
